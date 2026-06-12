@@ -1,2 +1,0 @@
-# PoC-banco
-POC CORS
